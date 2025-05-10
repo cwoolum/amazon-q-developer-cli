@@ -3,10 +3,18 @@ use std::mem::MaybeUninit;
 use std::os::unix::prelude::OsStrExt;
 use std::path::PathBuf;
 
+use nix::sys::signal::Signal;
+
 use super::{
     Pid,
     PidExt,
 };
+
+/// Terminate a process on macOS
+pub fn terminate_process(pid: Pid) -> Result<(), String> {
+    let nix_pid = nix::unistd::Pid::from_raw(pid.0);
+    nix::sys::signal::kill(nix_pid, Signal::SIGTERM).map_err(|e| format!("Failed to terminate process: {}", e))
+}
 
 impl PidExt for Pid {
     fn current() -> Self {

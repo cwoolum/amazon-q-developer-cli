@@ -13,11 +13,13 @@ pub use linux::*;
 
 #[cfg(target_os = "macos")]
 mod macos;
-// #[cfg(target_os = "macos")]
-// pub use macos::*;
+#[cfg(target_os = "macos")]
+pub use macos::*;
 
 #[cfg(target_os = "windows")]
 mod windows;
+#[cfg(target_os = "windows")]
+pub use windows::*;
 
 #[cfg(target_os = "freebsd")]
 mod freebsd;
@@ -50,6 +52,12 @@ macro_rules! pid_decl {
         impl fmt::Display for Pid {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "{}", self.0)
+            }
+        }
+
+        impl Pid {
+            pub fn from_raw(raw: $typ) -> Self {
+                Self(raw)
             }
         }
     };

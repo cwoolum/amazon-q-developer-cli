@@ -28,3 +28,4 @@ tracing.workspace = true
 thiserror.workspace = true
 uuid.workspace = true
 nix.workspace = true
+fig_util.workspace = true

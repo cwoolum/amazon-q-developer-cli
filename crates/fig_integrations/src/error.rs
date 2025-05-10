@@ -48,6 +48,7 @@ pub enum Error {
     PList(#[from] plist::Error),
     #[error("Permission denied: {}", .path.display())]
     PermissionDenied { path: PathBuf, inner: io::Error },
+    #[cfg(all(not(windows)))]
     #[error("nix: {}", .0)]
     Nix(#[from] nix::Error),
     #[cfg(target_os = "linux")]
