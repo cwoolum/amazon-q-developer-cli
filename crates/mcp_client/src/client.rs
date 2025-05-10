@@ -175,7 +175,7 @@ impl Client<StdioTransport> {
             command.args(args).spawn()?
         };
         let server_process_id = child.id().ok_or(ClientError::MissingProcessId)?;
-        let server_process_id = Pid::from_raw(server_process_id);
+        let server_process_id = Pid::from_raw(server_process_id.try_into().unwrap());
         let server_process_id = Some(server_process_id);
         let transport = Arc::new(transport::stdio::JsonRpcStdioTransport::client(child)?);
         Ok(Self {
