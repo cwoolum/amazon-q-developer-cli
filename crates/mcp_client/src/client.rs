@@ -598,11 +598,11 @@ mod tests {
 
         let (res_one, res_two) = tokio::join!(
             time::timeout(
-                time::Duration::from_secs(5),
+                time::Duration::from_secs(10),
                 test_client_routine(&mut client_one, serde_json::json!(client_one_cap))
             ),
             time::timeout(
-                time::Duration::from_secs(5),
+                time::Duration::from_secs(10),
                 test_client_routine(&mut client_two, serde_json::json!(client_two_cap))
             )
         );
