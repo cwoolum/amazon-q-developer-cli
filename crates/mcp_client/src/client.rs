@@ -175,7 +175,16 @@ impl Client<StdioTransport> {
             command.args(args).spawn()?
         };
         let server_process_id = child.id().ok_or(ClientError::MissingProcessId)?;
-        let server_process_id = Pid::from_raw(server_process_id.try_into().unwrap());
+
+        #[cfg(windows)]
+        let server_process_id = Pid::from_raw(server_process_id); // On Windows, child.id() returns u32 which matches Pid::from_raw
+        #[cfg(not(windows))]
+        let server_process_id = Pid::from_raw(
+            server_process_id
+                .try_into()
+                .map_err(|_err| ClientError::MissingProcessId)?,
+        ); // On Unix, safely convert u32 to i32
+
         let server_process_id = Some(server_process_id);
         let transport = Arc::new(transport::stdio::JsonRpcStdioTransport::client(child)?);
         Ok(Self {
