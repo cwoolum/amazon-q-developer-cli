@@ -111,7 +111,7 @@ mod tests {
     #[test]
     fn test_safe_handle() {
         // Test creating a SafeHandle with an invalid handle
-        let invalid_handle = HANDLE(0);
+        let invalid_handle = HANDLE(std::ptr::null_mut());
         let safe_handle = SafeHandle::new(invalid_handle);
         assert!(safe_handle.is_none(), "SafeHandle should be None for invalid handle");
 
