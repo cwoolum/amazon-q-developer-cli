@@ -920,7 +920,7 @@ mod tests {
             .invoke(&ctx, &mut stdout)
             .await
             .unwrap();
-        let actual = ctx.fs().read_to_string(test_file_path).await.unwrap();
+        let actual = ctx.fs().read_to_string(&local_file_path).await.unwrap();
         assert_eq!(actual, format!("{}{}{}\n", new_str, test_file_contents, new_str));
     }
 
