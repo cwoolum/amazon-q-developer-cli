@@ -887,15 +887,15 @@ mod tests {
         let ctx = Context::builder().with_test_home().await.unwrap().build_fake();
         let mut stdout = std::io::stdout();
 
-        let test_file_path = format!("{}file.txt", ROOT_PATH);
+        let local_file_path = format!("{}file.txt", ROOT_PATH);
         let test_file_contents = "hello there";
-        ctx.fs().write(&test_file_path, test_file_contents).await.unwrap();
+        ctx.fs().write(&local_file_path, test_file_contents).await.unwrap();
 
         let new_str = "test";
 
         // First, test appending
         let v = serde_json::json!({
-            "path": &test_file_path,
+            "path": &local_file_path,
             "command": "insert",
             "insert_line": 1,
             "new_str": new_str,
@@ -905,12 +905,12 @@ mod tests {
             .invoke(&ctx, &mut stdout)
             .await
             .unwrap();
-        let actual = ctx.fs().read_to_string(test_file_path).await.unwrap();
+        let actual = ctx.fs().read_to_string(&local_file_path).await.unwrap();
         assert_eq!(actual, format!("{}{}\n", test_file_contents, new_str));
 
         // Then, test prepending
         let v = serde_json::json!({
-            "path": test_file_path,
+            "path": &local_file_path,
             "command": "insert",
             "insert_line": 0,
             "new_str": new_str,
