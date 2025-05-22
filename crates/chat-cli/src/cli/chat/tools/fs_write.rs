@@ -867,7 +867,7 @@ mod tests {
             .invoke(&ctx, &mut stdout)
             .await
             .unwrap();
-        let actual = ctx.fs().read_to_string(TEST_FILE_PATH).await.unwrap();
+        let actual = ctx.fs().read_to_string(&test_file_path()).await.unwrap();
         assert_eq!(
             format!("{}\n", actual.lines().nth(1).unwrap()),
             new_str,
@@ -942,7 +942,7 @@ mod tests {
             .await
             .unwrap();
 
-        let actual = ctx.fs().read_to_string(TEST_FILE_PATH).await.unwrap();
+        let actual = ctx.fs().read_to_string(&test_file_path()).await.unwrap();
         assert_eq!(
             actual,
             format!("{}{}\n", TEST_FILE_CONTENTS, content_to_append),
