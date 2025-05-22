@@ -725,7 +725,7 @@ mod tests {
 
         let file_text = "Goodbye, world!\nSee you later";
         let v = serde_json::json!({
-            "path": "/my-file",
+            "path": &test_path,
             "command": "create",
             "file_text": file_text
         });
@@ -737,13 +737,13 @@ mod tests {
 
         // File should end with a newline
         assert_eq!(
-            ctx.fs().read_to_string("/my-file").await.unwrap(),
+            ctx.fs().read_to_string(&test_path).await.unwrap(),
             format!("{}\n", file_text)
         );
 
         let file_text = "This is a new string";
         let v = serde_json::json!({
-            "path": "/my-file",
+            "path": &test_path,
             "command": "create",
             "new_str": file_text
         });
@@ -754,7 +754,7 @@ mod tests {
             .unwrap();
 
         assert_eq!(
-            ctx.fs().read_to_string("/my-file").await.unwrap(),
+            ctx.fs().read_to_string(&test_path).await.unwrap(),
             format!("{}\n", file_text)
         );
     }
@@ -951,7 +951,7 @@ mod tests {
         );
 
         // Test appending to non-existent file (should fail)
-        let new_file_path = "/new_append_file.txt";
+        let new_file_path = format!("{}new_append_file.txt", ROOT_PATH);
         let content = "This is a new file created by append";
         let v = serde_json::json!({
             "path": new_file_path,
