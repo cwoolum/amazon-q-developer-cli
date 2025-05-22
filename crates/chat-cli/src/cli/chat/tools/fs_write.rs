@@ -765,7 +765,7 @@ mod tests {
 
         // No instances found
         let v = serde_json::json!({
-            "path": TEST_FILE_PATH,
+            "path": &test_file_path(),
             "command": "str_replace",
             "old_str": "asjidfopjaieopr",
             "new_str": "1623749",
@@ -780,7 +780,7 @@ mod tests {
 
         // Multiple instances found
         let v = serde_json::json!({
-            "path": TEST_FILE_PATH,
+            "path": &test_file_path(),
             "command": "str_replace",
             "old_str": "Hello world!",
             "new_str": "Goodbye world!",
@@ -795,7 +795,7 @@ mod tests {
 
         // Single instance found and replaced
         let v = serde_json::json!({
-            "path": TEST_FILE_PATH,
+            "path": &test_file_path(),
             "command": "str_replace",
             "old_str": "1: Hello world!",
             "new_str": "1: Goodbye world!",
@@ -807,7 +807,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             ctx.fs()
-                .read_to_string(TEST_FILE_PATH)
+                .read_to_string(&test_file_path())
                 .await
                 .unwrap()
                 .lines()
@@ -825,7 +825,7 @@ mod tests {
 
         let new_str = "1: New first line!\n";
         let v = serde_json::json!({
-            "path": TEST_FILE_PATH,
+            "path": &test_file_path(),
             "command": "insert",
             "insert_line": 0,
             "new_str": new_str,
@@ -835,7 +835,7 @@ mod tests {
             .invoke(&ctx, &mut stdout)
             .await
             .unwrap();
-        let actual = ctx.fs().read_to_string(TEST_FILE_PATH).await.unwrap();
+        let actual = ctx.fs().read_to_string(&test_file_path()).await.unwrap();
         assert_eq!(
             format!("{}\n", actual.lines().next().unwrap()),
             new_str,
@@ -856,7 +856,7 @@ mod tests {
 
         let new_str = "2: New second line!\n";
         let v = serde_json::json!({
-            "path": TEST_FILE_PATH,
+            "path": &test_file_path(),
             "command": "insert",
             "insert_line": 1,
             "new_str": new_str,
@@ -931,7 +931,7 @@ mod tests {
         // Test appending to existing file
         let content_to_append = "5: Appended line";
         let v = serde_json::json!({
-            "path": TEST_FILE_PATH,
+            "path": &test_file_path(),
             "command": "append",
             "new_str": content_to_append,
         });
