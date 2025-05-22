@@ -128,15 +128,20 @@ impl ContextBuilder {
     }
 
     /// Creates a chroot filesystem and fake environment so that `$HOME`
-    /// points to `<tempdir>/home/testuser`. Note that this replaces the
-    /// [Fs] and [Env] currently set with the builder.
+    /// points to `<tempdir>/home/testuser` on Unix or `<tempdir>\Users\testuser` on Windows.
+    /// Note that this replaces the [Fs] and [Env] currently set with the builder.
     #[cfg(test)]
     pub async fn with_test_home(mut self) -> Result<Self, std::io::Error> {
+        #[cfg(unix)]
         let home = "/home/testuser";
+        
+        #[cfg(windows)]
+        let home = "c:\\Users\\testuser"; // Using forward slashes so it's handled correctly by the append function
+
         let fs = Fs::new_chroot();
         fs.create_dir_all(home).await?;
         self.fs = Some(fs);
-        self.env = Some(Env::from_slice(&[("HOME", "/home/testuser"), ("USER", "testuser")]));
+        self.env = Some(Env::from_slice(&[("HOME", home), ("USER", "testuser")]));
         Ok(self)
     }
 
